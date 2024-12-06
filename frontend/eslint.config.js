@@ -48,16 +48,6 @@ export default tseslint.config(
 					prev: '*',
 					next: ['return'],
 				},
-				{
-					blankLine: 'always',
-					prev: 'const',
-					next: ['*'],
-				},
-				{
-					blankLine: 'never',
-					prev: 'const',
-					next: ['const'],
-				},
 			],
 			'sort-vars': ['error', { ignoreCase: true }],
 			'import/order': [

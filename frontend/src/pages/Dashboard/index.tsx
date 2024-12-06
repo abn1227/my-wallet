@@ -1,6 +1,7 @@
-import NavOnlyLayout from '@/layouts/NavOnlyLayout';
 import AccountWrapper from './components/AccountWrapper';
 import QuickActions from './components/QuickActions';
+
+import NavOnlyLayout from '@/layouts/NavOnlyLayout';
 
 const Dashboard = () => {
 	return (

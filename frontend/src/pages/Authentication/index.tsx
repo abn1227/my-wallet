@@ -1,14 +1,20 @@
+import { useEffect, useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import { useAppSelector } from '@/hooks/reduxHooks';
+import useAuth from '@/hooks/useAuth';
 import useTranslation from '@/hooks/useTranslation';
 import NavOnlyLayout from '@/layouts/NavOnlyLayout';
 import { fieldValidator } from '@/utils/fieldValidator';
 import { Fields, renderForm } from '@/utils/renderForm';
-import { useState } from 'react';
 
 interface AuthenticationProps {
 	type?: 'login' | 'register';
 }
 
 const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
@@ -16,118 +22,130 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		lastName: '',
 	});
 
-	const [errors, setErrors] = useState({
+	const [formErrors, setFormErrors] = useState({
 		email: '',
 		password: '',
 		firstName: '',
 		lastName: '',
 	});
 
-	const { t } = useTranslation({
-		ns: ['auth', 'common'],
-	});
+	const { user, token } = useAppSelector(state => state.auth);
+	const { t } = useTranslation({ ns: ['auth', 'common'] });
+	const { login, register, error: authError } = useAuth();
 
-	const onChangeText = (field: string, value: string) => {
-		setFormData({
-			...formData,
-			[field]: value,
-		});
+	useEffect(() => {
+		if (authError) alert(authError);
+	}, [authError]);
+
+	if (user && token) {
+		navigate('/dashboard');
+	}
+
+	const handleInputChange = (field: string, value: string) => {
+		setFormData(prevData => ({ ...prevData, [field]: value }));
 	};
 
-	const onSubmit = () => {
-		const newErrors: any = {};
+	const validateFormData = () => {
+		const errors: Record<keyof typeof formData, string> = {
+			email: '',
+			password: '',
+			firstName: '',
+			lastName: '',
+		};
 
-		for (const field in formData) {
-			const fieldKey = field as keyof typeof formData;
+		Object.keys(formData).forEach(key => {
+			const fieldKey = key as keyof typeof formData;
 
-			if (fieldKey === 'email')
-				newErrors[fieldKey] = fieldValidator(formData[fieldKey], ['required', 'email'])[0] || '';
+			if (fieldKey === 'email') {
+				errors[fieldKey] = fieldValidator(formData[fieldKey], ['required', 'email'])[0] || '';
+			}
 
-			if (fieldKey === 'password')
-				newErrors[fieldKey] = fieldValidator(formData[fieldKey], ['required', 'password'])[0] || '';
+			if (fieldKey === 'password') {
+				errors[fieldKey] = fieldValidator(formData[fieldKey], ['required', 'password'])[0] || '';
+			}
 
-			if (['firstName', 'lastName'].includes(fieldKey))
-				newErrors[fieldKey] = fieldValidator(formData[fieldKey], ['required'])[0] || '';
-		}
+			if (['firstName', 'lastName'].includes(fieldKey) && type === 'register') {
+				errors[fieldKey] = fieldValidator(formData[fieldKey], ['required'])[0] || '';
+			}
+		});
+
+		setFormErrors(errors);
+
+		return !Object.values(errors).some(error => error);
+	};
+
+	const handleFormSubmit = async () => {
+		if (!validateFormData()) return;
+
+		const credentials = {
+			email: formData.email,
+			password: formData.password,
+		};
 
 		if (type === 'login') {
-			// TODO: login
-			console.log(formData);
+			await login(credentials);
+		} else if (type === 'register') {
+			await register({ ...credentials, firstName: formData.firstName, lastName: formData.lastName });
 		}
-
-		if (type === 'register') {
-			// TODO: register
-			console.log(formData);
-		}
-
-		setErrors(newErrors);
 	};
 
-	const getTranslationError = (error: string) => (error ? t(`common:${error}`) : '');
+	const translateError = (error: string) => (error ? t(`common:${error}`) : '');
 
 	const loginFields: Fields[] = [
 		{
 			label: t('email'),
 			value: formData.email,
-			error: getTranslationError(errors.email),
+			error: translateError(formErrors.email),
 			required: true,
 			type: 'email',
-			onChange: e => onChangeText('email', e.target.value),
+			onChange: e => handleInputChange('email', e.target.value),
 		},
 		{
 			label: t('password'),
 			value: formData.password,
-			error: getTranslationError(errors.password),
+			error: translateError(formErrors.password),
 			required: true,
 			type: 'password',
-			onChange: e => onChangeText('password', e.target.value),
+			onChange: e => handleInputChange('password', e.target.value),
 		},
 	];
+
 	const registerFields: Fields[] = [
 		{
 			label: t('firstName'),
 			value: formData.firstName,
-			error: getTranslationError(errors.firstName),
+			error: translateError(formErrors.firstName),
 			required: true,
 			type: 'text',
-			onChange: e => onChangeText('firstName', e.target.value),
+			onChange: e => handleInputChange('firstName', e.target.value),
 		},
 		{
 			label: t('lastName'),
 			value: formData.lastName,
-			error: getTranslationError(errors.lastName),
+			error: translateError(formErrors.lastName),
 			required: true,
 			type: 'text',
-			onChange: e => onChangeText('lastName', e.target.value),
+			onChange: e => handleInputChange('lastName', e.target.value),
 		},
 		...loginFields,
 	];
+
 	return (
 		<NavOnlyLayout>
 			<div className="grid grid-cols-1">
 				<div className="card bg-base-200 p-4 w-full xl:w-1/3 mx-auto">
-					<h2 className="card-title p-4">{type === 'register' ? t('register') : t('login')}</h2>
-					{renderForm(
-						type === 'register'
-							? { fields: registerFields, onSubmit, submitLabel: t('register') }
-							: { fields: loginFields, onSubmit, submitLabel: t('login') },
-					)}
-					{type === 'register' && (
-						<span className="text-sm p-4 text-center">
-							{t('alreadyHaveAccount')}{' '}
-							<a className="text-accent" href="/login">
-								{t('login')}
-							</a>
-						</span>
-					)}
-					{type === 'login' && (
-						<span className="text-sm p-4 text-center">
-							{t('dontHaveAccount')}{' '}
-							<a href="/register" className="text-accent">
-								{t('register')}
-							</a>
-						</span>
-					)}
+					<h2 className="card-title p-4">{t(type)}</h2>
+					{renderForm({
+						fields: type === 'register' ? registerFields : loginFields,
+						onSubmit: handleFormSubmit,
+						submitLabel: t(type),
+					})}
+					<span className="text-sm p-4 text-center">
+						{type === 'register' ? t('alreadyHaveAccount') : t('dontHaveAccount')}{' '}
+						<a className="text-accent" href={type === 'register' ? '/login' : '/register'}>
+							{t(type === 'register' ? 'login' : 'register')}
+						</a>
+					</span>
 				</div>
 			</div>
 		</NavOnlyLayout>
