@@ -1,3 +1,6 @@
 node_modules
 .env
 .vscode
+.env.development
+.env.production
+backend/.env.development
