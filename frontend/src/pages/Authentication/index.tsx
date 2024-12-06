@@ -1,5 +1,6 @@
 import useTranslation from '@/hooks/useTranslation';
 import NavOnlyLayout from '@/layouts/NavOnlyLayout';
+import { fieldValidator } from '@/utils/fieldValidator';
 import { Fields, renderForm } from '@/utils/renderForm';
 import { useState } from 'react';
 
@@ -34,6 +35,21 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 	};
 
 	const onSubmit = () => {
+		const newErrors: any = {};
+
+		for (const field in formData) {
+			const fieldKey = field as keyof typeof formData;
+
+			if (fieldKey === 'email')
+				newErrors[fieldKey] = fieldValidator(formData[fieldKey], ['required', 'email'])[0] || '';
+
+			if (fieldKey === 'password')
+				newErrors[fieldKey] = fieldValidator(formData[fieldKey], ['required', 'password'])[0] || '';
+
+			if (['firstName', 'lastName'].includes(fieldKey))
+				newErrors[fieldKey] = fieldValidator(formData[fieldKey], ['required'])[0] || '';
+		}
+
 		if (type === 'login') {
 			// TODO: login
 			console.log(formData);
@@ -43,13 +59,17 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 			// TODO: register
 			console.log(formData);
 		}
+
+		setErrors(newErrors);
 	};
+
+	const getTranslationError = (error: string) => (error ? t(`common:${error}`) : '');
 
 	const loginFields: Fields[] = [
 		{
 			label: t('email'),
 			value: formData.email,
-			error: errors.email,
+			error: getTranslationError(errors.email),
 			required: true,
 			type: 'email',
 			onChange: e => onChangeText('email', e.target.value),
@@ -57,7 +77,7 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		{
 			label: t('password'),
 			value: formData.password,
-			error: errors.password,
+			error: getTranslationError(errors.password),
 			required: true,
 			type: 'password',
 			onChange: e => onChangeText('password', e.target.value),
@@ -67,7 +87,7 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		{
 			label: t('firstName'),
 			value: formData.firstName,
-			error: errors.firstName,
+			error: getTranslationError(errors.firstName),
 			required: true,
 			type: 'text',
 			onChange: e => onChangeText('firstName', e.target.value),
@@ -75,7 +95,7 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		{
 			label: t('lastName'),
 			value: formData.lastName,
-			error: errors.lastName,
+			error: getTranslationError(errors.lastName),
 			required: true,
 			type: 'text',
 			onChange: e => onChangeText('lastName', e.target.value),

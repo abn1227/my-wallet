@@ -2,7 +2,9 @@ import useTranslation from '@/hooks/useTranslation';
 import { Bell, Menu } from 'lucide-react';
 
 const Navbar = () => {
-	const { currentLanguage, changeLanguage } = useTranslation();
+	const { currentLanguage, changeLanguage, t } = useTranslation({
+		ns: 'common',
+	});
 	return (
 		<div className="navbar bg-base-200 fixed z-10">
 			<div className="navbar-start">
@@ -30,12 +32,12 @@ const Navbar = () => {
 				<a className="btn btn-ghost normal-case text-xl">My Wallet</a>
 			</div>
 			<div className="navbar-end">
-				<div className="tooltip tooltip-bottom" data-tip="Toogle Language">
+				<div className="tooltip tooltip-bottom" data-tip={t('i18n.toggleLanguage')}>
 					<button
 						onClick={() => changeLanguage(currentLanguage === 'en' ? 'es' : 'en')}
 						className="btn btn-circle"
 					>
-						{currentLanguage === 'en' ? 'ES' : 'EN'}
+						{currentLanguage === 'en' ? 'EN' : 'ES'}
 					</button>
 				</div>
 				<button className="btn btn-ghost btn-circle">
