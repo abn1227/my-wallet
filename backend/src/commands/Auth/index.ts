@@ -1,3 +1,5 @@
+import { hash } from 'bcryptjs';
+
 import { LoginDto, RegisterDto } from '@/dtos/Auth';
 import { AccontRepo } from '@/repositories/AccountRepo';
 import { UserRepo } from '@/repositories/UserRepo';
@@ -20,6 +22,7 @@ export class AuthCommandHandlers {
 	constructor() {
 		this.userRepo = new UserRepo();
 		this.authService = new AuthService();
+		this.acountRepo = new AccontRepo();
 	}
 
 	async login(command: LoginCommand): Promise<LoginResponse> {
@@ -54,7 +57,8 @@ export class AuthCommandHandlers {
 
 		if (user) throw new Error('User already exists');
 
-		const newUser = await this.userRepo.create({ firstName, lastName, email, password });
+		const hashedPassword = await hash(password, 10);
+		const newUser = await this.userRepo.create({ firstName, lastName, email, password: hashedPassword });
 		const token = this.authService.generateToken({
 			userId: newUser.id,
 			email: newUser.email,
