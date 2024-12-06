@@ -24,4 +24,8 @@ export class AccontRepo {
 	async findAll(): Promise<IAccount[]> {
 		return await Account.find();
 	}
+
+	async listByUserId(userId: string): Promise<IAccount[]> {
+		return await Account.find({ userId });
+	}
 }

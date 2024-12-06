@@ -19,15 +19,20 @@ export class DeleteAccountCommand {
 }
 
 export class AccountCommandHandlers {
-	constructor(private accountRepo: AccontRepo) {}
+	private accountRepo: AccontRepo;
+
+	constructor() {
+		this.accountRepo = new AccontRepo();
+	}
 
 	async createAccount(command: CreateAccountCommand): Promise<IAccount> {
-		const { name, color, icon, balance } = command.data;
+		const { name, color, icon, balance, currency } = command.data;
 		const account = await this.accountRepo.create({
 			name,
 			color,
 			icon,
 			balance,
+			currency,
 		});
 
 		return account;

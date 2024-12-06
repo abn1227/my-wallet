@@ -5,6 +5,8 @@ export interface IAccount extends Document {
 	color: string;
 	icon: string;
 	balance: number;
+	currency: string;
+	userId: string;
 }
 
 const AccountSchema = new Schema<IAccount>({
@@ -26,6 +28,15 @@ const AccountSchema = new Schema<IAccount>({
 		type: Number,
 		required: true,
 		default: 0,
+	},
+	currency: {
+		type: String,
+		required: true,
+		default: 'USD',
+	},
+	userId: {
+		type: String,
+		required: true,
 	},
 });
 

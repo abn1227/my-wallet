@@ -3,17 +3,14 @@ import { Request, Response } from 'express';
 import { AccountCommandHandlers, CreateAccountCommand } from '@/commands/Account';
 import { logger } from '@/logging/Logger';
 import { AccountQueryHandlers } from '@/queries/Account';
-import { AccontRepo } from '@/repositories/AccountRepo';
 
 export class AccountController {
 	private commandHandlers: AccountCommandHandlers;
 	private queryHandlers: AccountQueryHandlers;
 
 	constructor() {
-		const accountRepo = new AccontRepo();
-
-		this.commandHandlers = new AccountCommandHandlers(accountRepo);
-		this.queryHandlers = new AccountQueryHandlers(accountRepo);
+		this.commandHandlers = new AccountCommandHandlers();
+		this.queryHandlers = new AccountQueryHandlers();
 	}
 
 	async create(req: Request, res: Response) {

@@ -10,7 +10,11 @@ export class ListAccountsQuery {
 }
 
 export class AccountQueryHandlers {
-	constructor(private accountRepo: AccontRepo) {}
+	private accountRepo: AccontRepo;
+
+	constructor() {
+		this.accountRepo = new AccontRepo();
+	}
 
 	async getAccount(query: GetAccountQuery): Promise<IAccount | null> {
 		return await this.accountRepo.findById(query.id);

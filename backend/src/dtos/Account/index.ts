@@ -10,6 +10,8 @@ export class CreateAccountDto {
 	icon?: string;
 
 	balance?: number;
+
+	currency?: string;
 }
 
 export class UpdateAccountDto {
