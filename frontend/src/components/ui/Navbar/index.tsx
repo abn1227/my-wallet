@@ -1,10 +1,12 @@
-import useTranslation from '@/hooks/useTranslation';
 import { Bell, Menu } from 'lucide-react';
+
+import useTranslation from '@/hooks/useTranslation';
 
 const Navbar = () => {
 	const { currentLanguage, changeLanguage, t } = useTranslation({
 		ns: 'common',
 	});
+
 	return (
 		<div className="navbar bg-base-200 fixed z-10">
 			<div className="navbar-start">
