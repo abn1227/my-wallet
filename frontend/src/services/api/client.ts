@@ -28,7 +28,10 @@ export class ApiClient {
 	}
 
 	private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
-		if (response.status === 401) window.dispatchEvent(new CustomEvent('auth:expired'));
+		if (response.status === 401) {
+			window.dispatchEvent(new CustomEvent('auth:expired'));
+			StoreManager.logout();
+		}
 
 		if (!response.ok) {
 			const error = await response.json();

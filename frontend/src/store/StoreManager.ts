@@ -8,4 +8,8 @@ export class StoreManager {
 	static getAuthToken() {
 		return this.getState().auth.token;
 	}
+
+	static logout() {
+		store.dispatch({ type: 'auth/logout' });
+	}
 }
