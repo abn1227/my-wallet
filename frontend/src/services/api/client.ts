@@ -1,3 +1,4 @@
+import { StoreManager } from '@/store/StoreManager';
 import { ApiResponse, ParamValue } from '@/types/api';
 
 export class ApiError extends Error {
@@ -18,9 +19,11 @@ export class ApiClient {
 	}
 
 	private getHeaders(): HeadersInit {
-		// TODO: Implement Authorization header
+		const token = StoreManager.getAuthToken();
+
 		return {
 			...this.defaultHeaders,
+			...(token && { Authorization: `Bearer ${token}` }),
 		};
 	}
 
