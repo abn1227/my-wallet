@@ -7,7 +7,7 @@ import useAuth from '@/hooks/useAuth';
 import useTranslation from '@/hooks/useTranslation';
 import NavOnlyLayout from '@/layouts/NavOnlyLayout';
 import { fieldValidator } from '@/utils/fieldValidator';
-import { Fields, renderForm } from '@/utils/renderForm';
+import { Field, RenderedForm } from '@/utils/renderForm';
 
 interface AuthenticationProps {
 	type?: 'login' | 'register';
@@ -91,9 +91,10 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 
 	const translateError = (error: string) => (error ? t(`common:${error}`) : '');
 
-	const loginFields: Fields[] = [
+	const loginFields: Field[] = [
 		{
 			label: t('email'),
+			name: 'email',
 			value: formData.email,
 			error: translateError(formErrors.email),
 			required: true,
@@ -102,6 +103,7 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		},
 		{
 			label: t('password'),
+			name: 'password',
 			value: formData.password,
 			error: translateError(formErrors.password),
 			required: true,
@@ -110,9 +112,10 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		},
 	];
 
-	const registerFields: Fields[] = [
+	const registerFields: Field[] = [
 		{
 			label: t('firstName'),
+			name: 'firstName',
 			value: formData.firstName,
 			error: translateError(formErrors.firstName),
 			required: true,
@@ -121,6 +124,7 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 		},
 		{
 			label: t('lastName'),
+			name: 'lastName',
 			value: formData.lastName,
 			error: translateError(formErrors.lastName),
 			required: true,
@@ -135,11 +139,11 @@ const Authentication: React.FC<AuthenticationProps> = ({ type = 'login' }) => {
 			<div className="grid grid-cols-1">
 				<div className="card bg-base-200 p-4 w-full xl:w-1/3 mx-auto">
 					<h2 className="card-title p-4">{t(type)}</h2>
-					{renderForm({
-						fields: type === 'register' ? registerFields : loginFields,
-						onSubmit: handleFormSubmit,
-						submitLabel: t(type),
-					})}
+					<RenderedForm
+						fields={type == 'register' ? registerFields : loginFields}
+						onSubmit={handleFormSubmit}
+						submitLabel={t(type)}
+					/>
 					<span className="text-sm p-4 text-center">
 						{type === 'register' ? t('alreadyHaveAccount') : t('dontHaveAccount')}{' '}
 						<a className="text-accent" href={type === 'register' ? '/login' : '/register'}>
