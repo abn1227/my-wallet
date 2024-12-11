@@ -13,4 +13,8 @@ router.post('/', authValidation.authenticate, validateDto(CreateAccountDto), con
 
 router.get('/', authValidation.authenticate, controller.listUserAccounts);
 
+router.patch('/:id', authValidation.authenticate, controller.update);
+
+router.delete('/:id', authValidation.authenticate, controller.delete);
+
 export default router;

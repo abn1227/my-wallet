@@ -1,8 +1,13 @@
 import { Request, Response } from 'express';
 
-import { AccountCommandHandlers, CreateAccountCommand } from '@/commands/Account';
+import {
+	AccountCommandHandlers,
+	CreateAccountCommand,
+	DeleteAccountCommand,
+	UpdateAccountCommand,
+} from '@/commands/Account';
 import { logger } from '@/logging/Logger';
-import { AccountQueryHandlers } from '@/queries/Account';
+import { AccountQueryHandlers, ListUserAccountsQuery } from '@/queries/Account';
 
 export class AccountController {
 	private commandHandlers: AccountCommandHandlers;
@@ -26,9 +31,7 @@ export class AccountController {
 		} catch (error) {
 			logger.error('Error creating account', error);
 
-			if (error instanceof Error) {
-				return res.status(400).json({ message: error.message });
-			}
+			if (error instanceof Error) return res.status(400).json({ message: error.message });
 
 			return res.status(500).json({ message: 'Internal server error' });
 		}
@@ -38,16 +41,50 @@ export class AccountController {
 		try {
 			if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
 
-			const query = { userId: req.user.id };
+			const query = new ListUserAccountsQuery(req.user.id);
 			const accounts = await this.queryHandlers.listUserAccounts(query);
 
 			return res.status(200).json(accounts);
 		} catch (error) {
 			logger.error('Error listing user accounts', error);
 
-			if (error instanceof Error) {
-				return res.status(400).json({ message: error.message });
-			}
+			if (error instanceof Error) return res.status(400).json({ message: error.message });
+
+			return res.status(500).json({ message: 'Internal server error' });
+		}
+	};
+
+	update = async (req: Request, res: Response) => {
+		try {
+			if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
+
+			const data = req.body;
+			const id = req.params.id;
+			data.userId = req.user.id;
+			const command = new UpdateAccountCommand(id, data);
+			const account = await this.commandHandlers.updateAccount(command);
+
+			return res.status(200).json(account);
+		} catch (error) {
+			logger.error('Error updating account', error);
+
+			if (error instanceof Error) return res.status(400).json({ message: error.message });
+
+			return res.status(500).json({ message: 'Internal server error' });
+		}
+	};
+
+	delete = async (req: Request, res: Response) => {
+		try {
+			const id = req.params.id;
+			const command = new DeleteAccountCommand(id);
+			const deleted = await this.commandHandlers.deleteAccount(command);
+
+			return res.status(200).json({ deleted });
+		} catch (error) {
+			logger.error('Error deleting account', error);
+
+			if (error instanceof Error) return res.status(400).json({ message: error.message });
 
 			return res.status(500).json({ message: 'Internal server error' });
 		}
