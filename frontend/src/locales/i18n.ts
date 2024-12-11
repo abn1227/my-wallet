@@ -1,8 +1,9 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { auth as authEs, common as commonEs } from './es';
-import { auth as authEn, common as commonEn } from './en';
+import { initReactI18next } from 'react-i18next';
+
+import { auth as authEn, common as commonEn, account as accountEn } from './en';
+import { auth as authEs, common as commonEs, account as accountEs } from './es';
 
 export type Namespace = 'common' | 'auth' | 'dashboard';
 export type Language = (typeof supportedLngs)[number];
@@ -17,10 +18,12 @@ const resources = {
 	en: {
 		auth: authEn,
 		common: commonEn,
+		account: accountEn,
 	},
 	es: {
 		auth: authEs,
 		common: commonEs,
+		account: accountEs,
 	},
 };
 

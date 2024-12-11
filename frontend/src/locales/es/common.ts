@@ -1,6 +1,7 @@
 export const common = {
 	forms: {
 		optional: '(opcional)',
+		submit: 'Enviar',
 	},
 	i18n: {
 		toggleLanguage: 'Cambiar idioma',

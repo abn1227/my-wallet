@@ -1,0 +1,31 @@
+export const account = {
+	accounts: 'Cuentas',
+	addAccount: 'Agregar Cuenta',
+	createAccount: 'Crear Cuenta',
+	updateAccount: 'Actualizar Cuenta',
+	form: {
+		name: 'Nombre de la Cuenta',
+		balance: 'Saldo',
+		currency: 'Moneda',
+		color: 'Color',
+		icon: 'Ícono',
+		accountType: 'Tipo de Cuenta',
+		colors: {
+			red: 'Rojo',
+			green: 'Verde',
+			blue: 'Azul',
+			purple: 'Púrpura',
+			gold: 'Oro',
+			gray: 'Gris',
+		},
+		accountTypes: {
+			wallet: 'Billetera',
+			bank: 'Banco',
+			savings: 'Ahorros',
+			creditCard: 'Tarjeta de Crédito',
+			debitCard: 'Tarjeta de Débito',
+			electronicWallet: 'Billetera Electrónica',
+			other: 'Otro',
+		},
+	},
+};

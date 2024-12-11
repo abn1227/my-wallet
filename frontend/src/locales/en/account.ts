@@ -1,0 +1,31 @@
+export const account = {
+	accounts: 'Accounts',
+	addAccount: 'Add Account',
+	createAccount: 'Create Account',
+	updateAccount: 'Update Account',
+	form: {
+		name: 'Name',
+		balance: 'Balance',
+		currency: 'Currency',
+		color: 'Color',
+		icon: 'Icon',
+		accountType: 'Account Type',
+		colors: {
+			red: 'Red',
+			green: 'Green',
+			blue: 'Blue',
+			purple: 'Purple',
+			gold: 'Gold',
+			gray: 'Gray',
+		},
+		accountTypes: {
+			wallet: 'Wallet',
+			bank: 'Bank',
+			savings: 'Savings',
+			creditCard: 'Credit Card',
+			debitCard: 'Debit Card',
+			electronicWallet: 'Electronic Wallet',
+			other: 'Other',
+		},
+	},
+};
