@@ -12,6 +12,8 @@ export class CreateAccountDto {
 	balance?: number;
 
 	currency?: string;
+
+	userId?: string;
 }
 
 export class UpdateAccountDto {

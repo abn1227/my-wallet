@@ -9,6 +9,10 @@ export class ListAccountsQuery {
 	constructor(public readonly userId: string) {}
 }
 
+export class ListUserAccountsQuery {
+	constructor(public readonly userId: string) {}
+}
+
 export class AccountQueryHandlers {
 	private accountRepo: AccontRepo;
 
@@ -18,6 +22,10 @@ export class AccountQueryHandlers {
 
 	async getAccount(query: GetAccountQuery): Promise<IAccount | null> {
 		return await this.accountRepo.findById(query.id);
+	}
+
+	async listUserAccounts(query: ListUserAccountsQuery): Promise<IAccount[]> {
+		return await this.accountRepo.listByUserId(query.userId);
 	}
 
 	async listAccounts(): Promise<IAccount[]> {

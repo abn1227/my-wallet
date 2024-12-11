@@ -70,6 +70,8 @@ export class AuthCommandHandlers {
 			currency: 'USD',
 			balance: 0,
 			userId: newUser.id,
+			color: '#027D8A',
+			icon: 'Wallet',
 		});
 
 		return {

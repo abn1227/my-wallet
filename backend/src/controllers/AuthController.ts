@@ -9,7 +9,7 @@ export class AuthController {
 		this.authCommandHandlers = new AuthCommandHandlers();
 	}
 
-	async login(req: Request, res: Response) {
+	login = async (req: Request, res: Response) => {
 		try {
 			const command = new LoginCommand(req.body);
 			const response = await this.authCommandHandlers.login(command);
@@ -22,9 +22,9 @@ export class AuthController {
 
 			return res.status(500).json({ message: 'Internal server error' });
 		}
-	}
+	};
 
-	async register(req: Request, res: Response) {
+	register = async (req: Request, res: Response) => {
 		try {
 			const command = new RegisterCommand(req.body);
 			const response = await this.authCommandHandlers.register(command);
@@ -37,5 +37,5 @@ export class AuthController {
 
 			return res.status(500).json({ message: 'Internal server error' });
 		}
-	}
+	};
 }

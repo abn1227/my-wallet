@@ -7,7 +7,7 @@ import { validateDto } from '@/middlewares/validateDtos';
 const router = Router();
 const controller = new AuthController();
 
-router.post('/login', validateDto(LoginDto), controller.login.bind(controller));
-router.post('/register', validateDto(RegisterDto), controller.register.bind(controller));
+router.post('/login', validateDto(LoginDto), controller.login);
+router.post('/register', validateDto(RegisterDto), controller.register);
 
 export default router;

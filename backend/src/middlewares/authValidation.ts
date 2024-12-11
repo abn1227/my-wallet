@@ -13,7 +13,7 @@ export class AuthValidation {
 		this.userRepo = new UserRepo();
 	}
 
-	async authenticate(req: Request, res: Response, next: NextFunction) {
+	authenticate = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const token = this.authService.extractTokenFromHeader(req.headers.authorization);
 
@@ -32,7 +32,7 @@ export class AuthValidation {
 
 			return res.status(401).json({ message: 'Invalid token' });
 		}
-	}
+	};
 }
 
 declare module 'express-serve-static-core' {

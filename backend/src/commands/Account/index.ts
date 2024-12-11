@@ -26,13 +26,14 @@ export class AccountCommandHandlers {
 	}
 
 	async createAccount(command: CreateAccountCommand): Promise<IAccount> {
-		const { name, color, icon, balance, currency } = command.data;
+		const { name, color, icon, balance, currency, userId } = command.data;
 		const account = await this.accountRepo.create({
 			name,
 			color,
 			icon,
 			balance,
 			currency,
+			userId,
 		});
 
 		return account;

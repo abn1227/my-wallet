@@ -13,9 +13,12 @@ export class AccountController {
 		this.queryHandlers = new AccountQueryHandlers();
 	}
 
-	async create(req: Request, res: Response) {
+	create = async (req: Request, res: Response) => {
 		try {
+			if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
+
 			const data = req.body;
+			data.userId = req.user.id;
 			const command = new CreateAccountCommand(data);
 			const account = await this.commandHandlers.createAccount(command);
 
@@ -29,5 +32,24 @@ export class AccountController {
 
 			return res.status(500).json({ message: 'Internal server error' });
 		}
-	}
+	};
+
+	listUserAccounts = async (req: Request, res: Response) => {
+		try {
+			if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
+
+			const query = { userId: req.user.id };
+			const accounts = await this.queryHandlers.listUserAccounts(query);
+
+			return res.status(200).json(accounts);
+		} catch (error) {
+			logger.error('Error listing user accounts', error);
+
+			if (error instanceof Error) {
+				return res.status(400).json({ message: error.message });
+			}
+
+			return res.status(500).json({ message: 'Internal server error' });
+		}
+	};
 }
